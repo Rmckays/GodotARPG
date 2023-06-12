@@ -1,13 +1,13 @@
 using Godot;
-using System;
 
+namespace ARPG.scenes.player;
 
 public partial class player : CharacterBody2D
 {
     [Export] public int Speed = 10;
     private AnimationPlayer _animationPlayer; 
     
-	public void HandleInput()
+    public void HandleInput()
     {
         var movementDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
         Velocity = movementDirection * Speed;
