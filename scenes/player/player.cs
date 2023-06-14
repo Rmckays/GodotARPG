@@ -7,6 +7,9 @@ namespace ARPG.scenes.player;
 public partial class player : CharacterBody2D
 {
     [Export] public int Speed = 10;
+    [Export] public int MaxHealth = 3;
+    
+    private int _currentHealth;
     private AnimationPlayer _animationPlayer; 
     
     public void HandleInput()
@@ -18,6 +21,7 @@ public partial class player : CharacterBody2D
     public override void _Ready()
     {
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+        _currentHealth = MaxHealth;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -31,8 +35,17 @@ public partial class player : CharacterBody2D
 
     public void _On_Hurtbox_Area_Entered(Area2D area)
     {
-        GD.Print(area);
-        GD.Print(area.Get("name"));
+        var collider = (string)area.Get("name");
+        if (collider == "Hitbox")
+        {
+            _currentHealth--;
+            GD.Print(_currentHealth);
+        }
+
+        if (_currentHealth < 0)
+        {
+            _currentHealth = MaxHealth;
+        }
     }
 
     private void UpdateAnimation()
@@ -66,8 +79,9 @@ public partial class player : CharacterBody2D
         for (var i = 0; i < GetSlideCollisionCount(); i++)
         {
             var collision = GetSlideCollision(i);
-            var collider = collision.GetCollider();
-            GD.Print(collider.Get("name"));
+            var collider = (string)collision.GetCollider().Get("name");
+            GD.Print(collider);
+            
         }
     }
 }
