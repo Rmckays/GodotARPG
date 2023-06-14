@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://mf7ighe3ayrx"]
+[gd_scene load_steps=11 format=3 uid="uid://mf7ighe3ayrx"]
 
 [ext_resource type="Script" path="res://scenes/player/player.cs" id="1_4pxpl"]
 [ext_resource type="Texture2D" uid="uid://dlmrp08jpsyf" path="res://assets/PlayerSprites.png" id="1_thix3"]
@@ -102,6 +102,10 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_71jbu"]
 size = Vector2(15, 4)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5oo0e"]
+radius = 7.0
+height = 16.0
+
 [node name="Player" type="CharacterBody2D"]
 z_index = 1
 y_sort_enabled = true
@@ -123,3 +127,12 @@ libraries = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.5, -2)
 shape = SubResource("RectangleShape2D_71jbu")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -7)
+shape = SubResource("CapsuleShape2D_5oo0e")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_On_Hurtbox_Area_Entered"]

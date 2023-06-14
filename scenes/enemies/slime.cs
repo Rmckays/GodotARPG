@@ -7,14 +7,14 @@ public partial class slime : CharacterBody2D
     [Export] public float Limit = 0.5f;
     [Export] public Marker2D MarkerPosition;
 
-    private AnimatedSprite2D _animatedSprite2D;
+    private AnimationPlayer _animationPlayer;
     private Vector2 startPosition;
     private Vector2 endPosition;
     public override void _Ready()
     {
         startPosition = Position;
         endPosition = MarkerPosition.GlobalPosition;
-        _animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         base._Ready();
     }
 
@@ -28,25 +28,28 @@ public partial class slime : CharacterBody2D
 
     private void UpdateAnimation()
     {
-        var animationString = "walkUp";
-        if (Velocity.Y > 0)
+        if (Velocity.Length() == 0)
         {
-            animationString = "walkDown";
+            _animationPlayer.Stop();
         }
-        else if (Velocity.Y < 0)
+        else
         {
-            animationString = "walkUp";
+            var direction = "Down";
+            if (Velocity.X < 0)
+            {
+                direction = "Left";
+            }
+            else if (Velocity.X > 0)
+            {
+                direction = "Right";
+            }
+            else if (Velocity.Y < 0)
+            {
+                direction = "Up";
+            }
+            
+            _animationPlayer.Play("walk" + direction);
         }
-        else if (Velocity.X > 0)
-        {
-            animationString = "walkRight";
-        }
-        else if (Velocity.X < 0)
-        {
-            animationString = "walkLeft";
-        }
-        
-        _animatedSprite2D.Play(animationString);
     }
 
     private void ChangeDirection()

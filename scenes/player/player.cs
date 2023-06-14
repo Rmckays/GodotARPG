@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using Godot;
 
 namespace ARPG.scenes.player;
@@ -22,8 +24,15 @@ public partial class player : CharacterBody2D
     {
         HandleInput();
         MoveAndSlide();
+        HandleCollision();
         UpdateAnimation();
         base._PhysicsProcess(delta);
+    }
+
+    public void _On_Hurtbox_Area_Entered(Area2D area)
+    {
+        GD.Print(area);
+        GD.Print(area.Get("name"));
     }
 
     private void UpdateAnimation()
@@ -49,6 +58,16 @@ public partial class player : CharacterBody2D
             }
             
             _animationPlayer.Play("walk" + direction);
+        }
+    }
+
+    private void HandleCollision()
+    {
+        for (var i = 0; i < GetSlideCollisionCount(); i++)
+        {
+            var collision = GetSlideCollision(i);
+            var collider = collision.GetCollider();
+            GD.Print(collider.Get("name"));
         }
     }
 }
